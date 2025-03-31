@@ -1,22 +1,25 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+require('dotenv').config();
+
+const app = express();
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use(cors({
+  origin: ['http://localhost:3001', 'https://elderly-ease.netlify.app'],
+  credentials: true
+}));
+app.use(express.json());
 
 // Import routes
 const admissionRoutes = require('./routes/admissions');
 const familyDetailRoutes = require('./routes/familyDetails');
 const serviceRoutes = require('./routes/services');
 const paymentsRoutes = require('./routes/payments');
-
-// Connect to MongoDB
-connectDB();
-
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
 
 // Simple in-memory data store
 const services = [
@@ -184,7 +187,7 @@ const services = [
   }
 ];
 
-// Routes
+// Use routes
 app.use('/api/admissions', admissionRoutes);
 app.use('/api/family-details', familyDetailRoutes);
 app.use('/api/services', serviceRoutes);
@@ -203,9 +206,9 @@ app.get('/api/services/:id', (req, res) => {
   res.json(service);
 });
 
-// Test endpoint
+// Basic route for testing
 app.get('/', (req, res) => {
-  res.send('Healthcare Facility API is running');
+  res.json({ message: 'Healthcare Facility API is running' });
 });
 
 // Error handling middleware
@@ -214,8 +217,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5002;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
 });

@@ -1,48 +1,96 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5002/api';
+const baseURL = process.env.NODE_ENV === 'production'
+  ? 'https://elderly-ease.onrender.com'
+  : 'http://localhost:5002';
 
-export const api = {
-  // Services
-  getServices: async () => {
-    const response = await axios.get(`${BASE_URL}/services`);
-    return response.data;
+const axiosInstance = axios.create({
+  baseURL,
+  headers: {
+    'Content-Type': 'application/json',
   },
+  withCredentials: true,
+});
 
-  getService: async (slug) => {
-    const response = await axios.get(`${BASE_URL}/services/${slug}`);
+export const getServices = async () => {
+  try {
+    const response = await axiosInstance.get('/api/services');
     return response.data;
-  },
-
-  // Admissions
-  createAdmission: async (admissionData) => {
-    const response = await axios.post(`${BASE_URL}/admissions`, admissionData);
-    return response.data;
-  },
-
-  getAdmission: async (id) => {
-    const response = await axios.get(`${BASE_URL}/admissions/${id}`);
-    return response.data;
-  },
-
-  updateAdmission: async (id, admissionData) => {
-    const response = await axios.patch(`${BASE_URL}/admissions/${id}`, admissionData);
-    return response.data;
-  },
-
-  // Family Details
-  createFamilyDetails: async (familyData) => {
-    const response = await axios.post(`${BASE_URL}/family-details`, familyData);
-    return response.data;
-  },
-
-  getFamilyDetails: async (id) => {
-    const response = await axios.get(`${BASE_URL}/family-details/${id}`);
-    return response.data;
-  },
-
-  updateFamilyDetails: async (id, familyData) => {
-    const response = await axios.patch(`${BASE_URL}/family-details/${id}`, familyData);
-    return response.data;
+  } catch (error) {
+    throw error;
   }
 };
+
+export const getServiceBySlug = async (slug) => {
+  try {
+    const response = await axiosInstance.get(`/api/services/${slug}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const submitAdmission = async (admissionData) => {
+  try {
+    const response = await axiosInstance.post('/api/admissions', admissionData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAdmission = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/api/admissions/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateAdmission = async (id, admissionData) => {
+  try {
+    const response = await axiosInstance.patch(`/api/admissions/${id}`, admissionData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const submitFamilyDetails = async (familyData) => {
+  try {
+    const response = await axiosInstance.post('/api/family-details', familyData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getFamilyDetails = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/api/family-details/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateFamilyDetails = async (id, familyData) => {
+  try {
+    const response = await axiosInstance.patch(`/api/family-details/${id}`, familyData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const submitPayment = async (paymentData) => {
+  try {
+    const response = await axiosInstance.post('/api/payments', paymentData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export default axiosInstance;
